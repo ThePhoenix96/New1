@@ -1,0 +1,854 @@
+Private Sub CommandButton1_Click()
+
+    Dim i As Integer
+    Dim a As Integer
+    Dim n As Integer
+    Dim p As Integer
+    Dim c As Range
+    Dim b As Integer
+    Dim Str1 As String
+    Dim Str2 As String
+    Dim resultado1 As Long
+    b = 0
+    n = Hoja1.Cells(2, 31)
+    p = 0
+    a = 0
+    
+    For i = 1 To n
+    
+    a = 2 * i + 1
+        
+        For j = 1 To n
+            
+            b = 2 * j + 1
+            
+       
+        ' Para las OL en caso de cada v y declividad
+                If (Hoja1.Cells(a, 10)) >= 160 Then
+                    If (Hoja1.Cells(a, 11)) > -4 Then
+                        p = Hoja2.Cells(2, 3)
+                    ElseIf -12 < (Hoja1.Cells(a, 11)) Then
+                        p = Hoja2.Cells(7, 3)
+                    ElseIf -24 < (Hoja1.Cells(a, 11)) Then
+                        p = Hoja2.Cells(8, 3)
+                    ElseIf -24 > (Hoja1.Cells(a, 11)) Then
+                        p = Hoja2.Cells(9, 3)
+                    End If
+                
+                ElseIf (Hoja1.Cells(a, 10)) < 160 Then
+                    If (Hoja1.Cells(a, 11)) > 10 Then
+                        p = Hoja2.Cells(6, 2)
+                    ElseIf 8 < (Hoja1.Cells(a, 11)) Then
+                        p = Hoja2.Cells(5, 2)
+                    ElseIf 6 < (Hoja1.Cells(a, 11)) Then
+                        p = Hoja2.Cells(4, 2)
+                    ElseIf 4 < (Hoja1.Cells(a, 11)) Then
+                        p = Hoja2.Cells(3, 2)
+                    ElseIf -4 < (Hoja1.Cells(a, 11)) Then
+                        p = Hoja2.Cells(2, 2)
+                    ElseIf -12 < (Hoja1.Cells(a, 11)) Then
+                        p = Hoja2.Cells(7, 2)
+                    ElseIf -24 < (Hoja1.Cells(a, 11)) Then
+                        p = Hoja2.Cells(8, 2)
+                    ElseIf -24 > (Hoja1.Cells(a, 11)) Then
+                        p = Hoja2.Cells(9, 2)
+                    End If
+                End If
+            
+    
+        ' Para elegir el tipo de circunstancia
+                If (Hoja1.Cells(a, 16)) = "OL" Then
+                    Hoja1.Cells(a, 12) = p
+                    
+                    'Si la previa esta en pk menor (D), o pk mayor (I) en comparación con la de pie
+                        If (Hoja1.Cells(a, 18)) = "D" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(a + 1, 7)) * 1000)
+                            If Hoja1.Cells(a, 4) = "-" Then
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            Else
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a, 5) + Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            End If
+                        ElseIf (Hoja1.Cells(a, 18)) = "I" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(a + 1, 7)) * 1000)
+                                If Hoja1.Cells(a, 4) = "-" Then
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                Else
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a, 5) + Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                End If
+                        
+                        Else
+                            Hoja1.Cells(a, 8) = ""
+                            Hoja1.Cells(a + 1, 9) = ""
+                            Hoja1.Cells(a + 1, 12) = ""
+                            Hoja1.Cells(a + 1, 13) = ""
+                        End If
+                    
+                    If Hoja1.Cells(a, 12) - 1 < Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(93, 252, 4)
+                    ElseIf Hoja1.Cells(a, 12) + 1 > Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(300, 160, 27)
+                    Else
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(300, 160, 27)
+                    End If
+                       If Hoja1.Cells(a, 12) - 1 < Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(93, 252, 4)
+                    ElseIf Hoja1.Cells(a, 12) + 1 > Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(300, 160, 27)
+                    End If
+                    
+                    
+                     ElseIf (Hoja1.Cells(a, 16)) = "A" Then
+                    Hoja1.Cells(a, 12) = "Es una señal avanzada"
+                    
+                                            'Si la previa esta en pk menor (D), o pk mayor (I) en comparación con la de pie
+                        If (Hoja1.Cells(a, 18)) = "D" Then
+                            Hoja1.Cells(a + 1, 12) = "avanzada"
+                            If Hoja1.Cells(a, 4) = "-" Then
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                Hoja1.Cells(a + 1, 8) = "-"
+                                Hoja1.Cells(a + 1, 13) = "avanzada"
+                            Else
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a, 5)) / 1000
+                                Hoja1.Cells(a + 1, 8) = "-"
+                                Hoja1.Cells(a + 1, 13) = "avanzada"
+                            End If
+                        ElseIf (Hoja1.Cells(a, 18)) = "I" Then
+                            Hoja1.Cells(a + 1, 12) = "avanzada"
+                                If Hoja1.Cells(a, 4) = "-" Then
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                    Hoja1.Cells(a + 1, 8) = "-"
+                                    Hoja1.Cells(a + 1, 13) = "avanzada"
+                                Else
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 8) = "-"
+                                    Hoja1.Cells(a + 1, 13) = "avanzada"
+                                End If
+                                
+                                        Else
+                                           Hoja1.Cells(a, 8) = ""
+                                           Hoja1.Cells(a + 1, 9) = ""
+                                            Hoja1.Cells(a + 1, 12) = ""
+                                            Hoja1.Cells(a + 1, 13) = ""
+                                        End If
+                    
+             
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(300, 160, 27)
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(300, 160, 27)
+                        Hoja1.Cells(a, 12).Interior.Color = RGB(300, 160, 27)
+                        Hoja1.Cells(a + 1, 8).Interior.Color = RGB(300, 160, 27)
+                        Hoja1.Cells(a + 1, 7).Interior.Color = RGB(300, 160, 27)
+                    
+                    
+                    
+                    ElseIf (Hoja1.Cells(a, 16)) = "U" Then
+                    Hoja1.Cells(a, 12) = "Señal solo baliza de pie"
+                    
+                                            'Si la previa esta en pk menor (D), o pk mayor (I) en comparación con la de pie
+                        If (Hoja1.Cells(a, 18)) = "D" Then
+                            Hoja1.Cells(a + 1, 12) = "solo pie"
+                            If Hoja1.Cells(a, 4) = "-" Then
+                                Hoja1.Cells(a, 8) = "-"
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                Hoja1.Cells(a + 1, 13) = "solo pie"
+                            Else
+                                Hoja1.Cells(a, 8) = "-"
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 13) = "solo pie"
+                            End If
+                        ElseIf (Hoja1.Cells(a, 18)) = "I" Then
+                            Hoja1.Cells(a + 1, 12) = "solo pie"
+                                If Hoja1.Cells(a, 4) = "-" Then
+                                    Hoja1.Cells(a, 8) = "-"
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                    Hoja1.Cells(a + 1, 13) = "solo pie"
+                                Else
+                                    Hoja1.Cells(a, 8) = "-"
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 13) = "solo pie"
+                                End If
+                                
+                                        Else
+                                           Hoja1.Cells(a, 8) = ""
+                                           Hoja1.Cells(a + 1, 9) = ""
+                                            Hoja1.Cells(a + 1, 12) = ""
+                                            Hoja1.Cells(a + 1, 13) = ""
+                                        End If
+                    
+             
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(300, 160, 27)
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(300, 160, 27)
+                        Hoja1.Cells(a, 12).Interior.Color = RGB(300, 160, 27)
+                        Hoja1.Cells(a, 8).Interior.Color = RGB(300, 160, 27)
+                        Hoja1.Cells(a, 7).Interior.Color = RGB(300, 160, 27)
+                    
+                    
+                ElseIf (Hoja1.Cells(a, 16)) = "SA1" Then
+                    Hoja1.Cells(a, 12) = Hoja2.Cells(11, 3)
+                    
+                        'Si la previa esta en pk menor (D), o pk mayor (I) en comparación con la de pie
+                        If (Hoja1.Cells(a, 18)) = "D" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(a + 1, 7)) * 1000)
+                            If Hoja1.Cells(a, 4) = "-" Then
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            Else
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a, 5) + Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            End If
+                        ElseIf (Hoja1.Cells(a, 18)) = "I" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(a + 1, 7)) * 1000)
+                                If Hoja1.Cells(a, 4) = "-" Then
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                Else
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a, 5) + Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                End If
+                        
+                        Else
+                            Hoja1.Cells(a, 8) = ""
+                            Hoja1.Cells(a + 1, 9) = ""
+                            Hoja1.Cells(a + 1, 12) = ""
+                            Hoja1.Cells(a + 1, 13) = ""
+                        End If
+                    
+                    If Hoja1.Cells(a, 12) < Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(93, 252, 4)
+                    ElseIf Hoja1.Cells(a, 12) > Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(300, 160, 27)
+                    Else
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(255, 51, 0)
+                    End If
+                       If Hoja1.Cells(a, 12) < Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(93, 252, 4)
+                    ElseIf Hoja1.Cells(a, 12) > Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(300, 160, 27)
+                    End If
+                ElseIf (Hoja1.Cells(a, 16)) = "SA1" Then
+                    Hoja1.Cells(a, 12) = Hoja2.Cells(11, 3)
+                    
+                                            'Si la previa esta en pk menor (D), o pk mayor (I) en comparación con la de pie
+                        If (Hoja1.Cells(a, 18)) = "D" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(a + 1, 7)) * 1000)
+                            If Hoja1.Cells(a, 4) = "-" Then
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            Else
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a, 5) + Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            End If
+                        ElseIf (Hoja1.Cells(a, 18)) = "I" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(a + 1, 7)) * 1000)
+                                If Hoja1.Cells(a, 4) = "-" Then
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                Else
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a, 5) + Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                End If
+                                
+                                        Else
+                                           Hoja1.Cells(a, 8) = ""
+                                           Hoja1.Cells(a + 1, 9) = ""
+                                            Hoja1.Cells(a + 1, 12) = ""
+                                            Hoja1.Cells(a + 1, 13) = ""
+                                        End If
+                    
+                        If Hoja1.Cells(a, 12) < Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(93, 252, 4)
+                    ElseIf Hoja1.Cells(a, 12) > Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(300, 160, 27)
+                    End If
+                       If Hoja1.Cells(a, 12) < Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(93, 252, 4)
+                    ElseIf Hoja1.Cells(a, 12) > Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(300, 160, 27)
+                    End If
+                ElseIf (Hoja1.Cells(a, 16)) = "SA2" Then
+                    Hoja1.Cells(a, 12) = Hoja2.Cells(11, 4)
+                    
+                                            'Si la previa esta en pk menor (D), o pk mayor (I) en comparación con la de pie
+                        If (Hoja1.Cells(a, 18)) = "D" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(a + 1, 7)) * 1000)
+                            If Hoja1.Cells(a, 4) = "-" Then
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            Else
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a, 5) + Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            End If
+                        ElseIf (Hoja1.Cells(a, 18)) = "I" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(a + 1, 7)) * 1000)
+                                If Hoja1.Cells(a, 4) = "-" Then
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                Else
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a, 5) + Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                End If
+                                
+                                        Else
+                                           Hoja1.Cells(a, 8) = ""
+                                           Hoja1.Cells(a + 1, 9) = ""
+                                            Hoja1.Cells(a + 1, 12) = ""
+                                            Hoja1.Cells(a + 1, 13) = ""
+                                        End If
+                    
+                    If Hoja1.Cells(a, 12) < Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(93, 252, 4)
+                    ElseIf Hoja1.Cells(a, 12) > Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(300, 160, 27)
+                    End If
+                       If Hoja1.Cells(a, 12) < Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(93, 252, 4)
+                    ElseIf Hoja1.Cells(a, 12) > Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(300, 160, 27)
+                    End If
+                ElseIf (Hoja1.Cells(a, 16)) = "SA3" Then
+                    Hoja1.Cells(a, 12) = "4 * Hoja1.Cells(a, 10) / 3.6"
+                    
+                                            'Si la previa esta en pk menor (D), o pk mayor (I) en comparación con la de pie
+                        If (Hoja1.Cells(a, 18)) = "D" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(a + 1, 7)) * 1000)
+                            If Hoja1.Cells(a, 4) = "-" Then
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            Else
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a, 5) + Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            End If
+                        ElseIf (Hoja1.Cells(a, 18)) = "I" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(a + 1, 7)) * 1000)
+                                If Hoja1.Cells(a, 4) = "-" Then
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                Else
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a, 5) + Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                End If
+                                
+                                                Else
+                                                   Hoja1.Cells(a, 8) = ""
+                                                   Hoja1.Cells(a + 1, 9) = ""
+                                                    Hoja1.Cells(a + 1, 12) = ""
+                                                    Hoja1.Cells(a + 1, 13) = ""
+                                                End If
+                    
+                    If Hoja1.Cells(a, 12) < Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(93, 252, 4)
+                    ElseIf Hoja1.Cells(a, 12) > Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(300, 160, 27)
+                    End If
+                       If Hoja1.Cells(a, 12) < Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(93, 252, 4)
+                    ElseIf Hoja1.Cells(a, 12) > Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(300, 160, 27)
+                    End If
+                ElseIf (Hoja1.Cells(a, 16)) = "Sal1" Then
+                    Hoja1.Cells(a, 12) = 4 * Hoja1.Cells(a, 10) / 3.6
+                    
+                                            'Si la previa esta en pk menor (D), o pk mayor (I) en comparación con la de pie
+                        If (Hoja1.Cells(a, 18)) = "D" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(a + 1, 7)) * 1000)
+                            If Hoja1.Cells(a, 4) = "-" Then
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            Else
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a, 5) + Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            End If
+                        ElseIf (Hoja1.Cells(a, 18)) = "I" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(a + 1, 7)) * 1000)
+                                If Hoja1.Cells(a, 4) = "-" Then
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                Else
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a, 5) + Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                End If
+                                
+                                                Else
+                                               Hoja1.Cells(a, 8) = ""
+                                               Hoja1.Cells(a + 1, 9) = ""
+                                                Hoja1.Cells(a + 1, 12) = ""
+                                                Hoja1.Cells(a + 1, 13) = ""
+                                            End If
+                    
+                    If Hoja1.Cells(a, 12) < Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(93, 252, 4)
+                    ElseIf Hoja1.Cells(a, 12) > Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(300, 160, 27)
+                    End If
+                       If Hoja1.Cells(a, 12) < Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(93, 252, 4)
+                    ElseIf Hoja1.Cells(a, 12) > Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(300, 160, 27)
+                    End If
+                ElseIf (Hoja1.Cells(a, 16)) = "Sal2" Then
+                    Hoja1.Cells(a, 12) = p
+                    
+                                            'Si la previa esta en pk menor (D), o pk mayor (I) en comparación con la de pie
+                        If (Hoja1.Cells(a, 18)) = "D" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(a + 1, 7)) * 1000)
+                            If Hoja1.Cells(a, 4) = "-" Then
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            Else
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a, 5) + Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            End If
+                        ElseIf (Hoja1.Cells(a, 18)) = "I" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(a + 1, 7)) * 1000)
+                                If Hoja1.Cells(a, 4) = "-" Then
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                Else
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a, 5) + Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                End If
+                                
+                                                Else
+                                               Hoja1.Cells(a, 8) = ""
+                                               Hoja1.Cells(a + 1, 9) = ""
+                                                Hoja1.Cells(a + 1, 12) = ""
+                                                Hoja1.Cells(a + 1, 13) = ""
+                                            End If
+                    
+                    If Hoja1.Cells(a, 12) < Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(93, 252, 4)
+                    ElseIf Hoja1.Cells(a, 12) > Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(300, 160, 27)
+                    End If
+                       If Hoja1.Cells(a, 12) < Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(93, 252, 4)
+                    ElseIf Hoja1.Cells(a, 12) > Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(300, 160, 27)
+                    End If
+                ElseIf (Hoja1.Cells(a, 16)) = "Sal3" Then
+                    Hoja1.Cells(a, 12) = p
+                    
+                                            'Si la previa esta en pk menor (D), o pk mayor (I) en comparación con la de pie
+                        If (Hoja1.Cells(a, 18)) = "D" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(a + 1, 7)) * 1000)
+                            If Hoja1.Cells(a, 4) = "-" Then
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            Else
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a, 5) + Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            End If
+                        ElseIf (Hoja1.Cells(a, 18)) = "I" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(a + 1, 7)) * 1000)
+                                If Hoja1.Cells(a, 4) = "-" Then
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                Else
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a, 5) + Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                End If
+                        
+                                        Else
+                                               Hoja1.Cells(a, 8) = ""
+                                               Hoja1.Cells(a + 1, 9) = ""
+                                                Hoja1.Cells(a + 1, 12) = ""
+                                                Hoja1.Cells(a + 1, 13) = ""
+                                            End If
+                                                
+                    If Hoja1.Cells(a, 12) < Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(93, 252, 4)
+                    ElseIf Hoja1.Cells(a, 12) > Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(300, 160, 27)
+                    Else
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(300, 160, 27)
+                    End If
+                       If Hoja1.Cells(a, 12) < Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(93, 252, 4)
+                    ElseIf Hoja1.Cells(a, 12) > Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(300, 160, 27)
+                    Else
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(300, 160, 27)
+                    End If
+                ElseIf (Hoja1.Cells(a, 16)) = "PaN" Then
+                    Hoja1.Cells(a, 12) = 5
+                    Hoja1.Cells(a, 8) = "-"
+                    Hoja1.Cells(a, 8).Interior.Color = RGB(300, 160, 27)
+                    Hoja1.Cells(a, 7).Interior.Color = RGB(300, 160, 27)
+                    
+                     'Si la previa esta en pk menor (D), o pk mayor (I) en comparación con la de pie
+                        If (Hoja1.Cells(a, 18)) = "D" Then
+                            
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 3) - Hoja1.Cells(a + 1, 7)) * 1000)
+                            If Hoja1.Cells(a, 4) = "-" Then
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 3) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            Else
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a + 1, 8) - Hoja1.Cells(a, 4)) * 1000)
+                            End If
+                        ElseIf (Hoja1.Cells(a, 18)) = "I" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 3) - Hoja1.Cells(a + 1, 7)) * 1000)
+                                If Hoja1.Cells(a, 4) = "-" Then
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 3) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                Else
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 4) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                End If
+                                
+                                        Else
+                                               Hoja1.Cells(a, 8) = ""
+                                               Hoja1.Cells(a + 1, 9) = ""
+                                                Hoja1.Cells(a + 1, 12) = ""
+                                                Hoja1.Cells(a + 1, 13) = ""
+                                            End If
+                    
+                    If Hoja1.Cells(a, 12) + 1 < Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) - 1 > Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(93, 252, 4)
+                    Else
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(93, 252, 4)
+                    End If
+                       If Hoja1.Cells(a, 12) + 1 < Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) - 1 > Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(93, 252, 4)
+                    Else
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(93, 252, 4)
+                    End If
+                ElseIf (Hoja1.Cells(a, 16)) = "CSV" Then
+                    Hoja1.Cells(a, 12) = 5
+                    Hoja1.Cells(a, 8) = "-"
+                    Hoja1.Cells(a, 8).Interior.Color = RGB(300, 160, 27)
+                    Hoja1.Cells(a, 7).Interior.Color = RGB(300, 160, 27)
+                    
+                                         'Si la previa esta en pk menor (D), o pk mayor (I) en comparación con la de pie
+                        If (Hoja1.Cells(a, 18)) = "D" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 3) - Hoja1.Cells(a + 1, 7)) * 1000)
+                            If Hoja1.Cells(a, 4) = "-" Then
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 3) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            Else
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a + 1, 8) - Hoja1.Cells(a, 4)) * 1000)
+                            End If
+                        ElseIf (Hoja1.Cells(a, 18)) = "I" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 3) - Hoja1.Cells(a + 1, 7)) * 1000)
+                                If Hoja1.Cells(a, 4) = "-" Then
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 3) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                Else
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 4) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                End If
+                                
+                                        Else
+                                               Hoja1.Cells(a, 8) = ""
+                                               Hoja1.Cells(a + 1, 9) = ""
+                                                Hoja1.Cells(a + 1, 12) = ""
+                                                Hoja1.Cells(a + 1, 13) = ""
+                                            End If
+                    
+                    If Hoja1.Cells(a, 12) + 1 < Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) - 1 > Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(93, 252, 4)
+                    Else
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(93, 252, 4)
+                    End If
+                       If Hoja1.Cells(a, 12) + 1 < Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) - 1 > Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 12) = Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(93, 252, 4)
+                    Else
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(93, 252, 4)
+                    End If
+                ElseIf (Hoja1.Cells(a, 16)) = "ZLP" Then
+                    Hoja1.Cells(a, 12) = "35 - 77"
+                    
+                     'Si la previa esta en pk menor (D), o pk mayor (I) en comparación con la de pie
+                        If (Hoja1.Cells(a, 18)) = "D" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(a + 1, 7)) * 1000)
+                            If Hoja1.Cells(a, 4) = "-" Then
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            Else
+                                Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a, 5) + Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) - (Hoja1.Cells(a + 1, 5)) / 1000
+                                Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                            End If
+                        ElseIf (Hoja1.Cells(a, 18)) = "I" Then
+                            Hoja1.Cells(a + 1, 12) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(a + 1, 7)) * 1000)
+                                If Hoja1.Cells(a, 4) = "-" Then
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 5)
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a + 1, 5)
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                Else
+                                    Hoja1.Cells(a, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a, 5) + Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 8) = Hoja1.Cells(a, 4) + (Hoja1.Cells(a + 1, 5)) / 1000
+                                    Hoja1.Cells(a + 1, 13) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(a + 1, 8)) * 1000)
+                                End If
+                                
+                                        Else
+                                               Hoja1.Cells(a, 8) = ""
+                                               Hoja1.Cells(a + 1, 9) = ""
+                                                Hoja1.Cells(a + 1, 12) = ""
+                                                Hoja1.Cells(a + 1, 13) = ""
+                                            End If
+                    
+                    If 77 < Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(255, 51, 0)
+                    ElseIf 77 > Hoja1.Cells(a + 1, 12) > 35 Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(300, 160, 27)
+                    ElseIf 35 > Hoja1.Cells(a + 1, 12) Then
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(255, 51, 0)
+                    Else
+                        Hoja1.Cells(a + 1, 12).Interior.Color = RGB(93, 252, 4)
+                    End If
+                    If 77 < Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(255, 51, 0)
+                    ElseIf 77 > Hoja1.Cells(a + 1, 13) > 35 Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(300, 160, 27)
+                    ElseIf 35 > Hoja1.Cells(a + 1, 13) Then
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(255, 51, 0)
+                    Else
+                        Hoja1.Cells(a + 1, 13).Interior.Color = RGB(93, 252, 4)
+                    End If
+                Else
+                    Hoja1.Cells(a, 12) = ""
+                End If
+           
+    ' Si es Alta velocidad o Convencional
+    
+                If (Hoja1.Cells(a, 17)) = "AV" Then
+                    Hoja1.Cells(a, 14) = 625
+                ElseIf (Hoja1.Cells(a, 17)) = "CON" Then
+                    Hoja1.Cells(a, 14) = 470
+                Else
+                    Hoja1.Cells(a, 14) = ""
+                End If
+       
+        ' Para distancia entre balizas consecutivas
+            
+                    Str1 = (Hoja1.Cells(b, 2))
+                    Str2 = (Hoja1.Cells(a, 19))
+                    If Str2 = Str1 Then
+                        Hoja1.Cells(a + 1, 14) = Abs((Hoja1.Cells(a, 7) - Hoja1.Cells(b, 7)) * 1000)
+                        Hoja1.Cells(a + 1, 15) = Abs((Hoja1.Cells(a, 8) - Hoja1.Cells(b, 8)) * 1000)
+                        
+                    ElseIf Str2 = "-" Then
+                        Hoja1.Cells(a, 14) = "No se tiene en cuenta"
+                        Hoja1.Cells(a + 1, 14) = "No se tiene en cuenta"
+                        Hoja1.Cells(a + 1, 15) = "No se tiene en cuenta"
+                        
+                    End If
+                    
+        ' Para pintar cuando sean correcto o no que AV o CON
+                    If Hoja1.Cells(a, 14) < Hoja1.Cells(a + 1, 14) Then
+                        Hoja1.Cells(a + 1, 14).Interior.Color = RGB(93, 252, 4)
+                    ElseIf Hoja1.Cells(a, 14) > Hoja1.Cells(a + 1, 14) Then
+                        Hoja1.Cells(a + 1, 14).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 14) = Hoja1.Cells(a + 1, 14) Then
+                        Hoja1.Cells(a + 1, 14).Interior.Color = RGB(300, 160, 27)
+                    End If
+                       If Hoja1.Cells(a, 14) < Hoja1.Cells(a + 1, 15) Then
+                        Hoja1.Cells(a + 1, 15).Interior.Color = RGB(93, 252, 4)
+                    ElseIf Hoja1.Cells(a, 14) > Hoja1.Cells(a + 1, 15) Then
+                        Hoja1.Cells(a + 1, 15).Interior.Color = RGB(255, 51, 0)
+                    ElseIf Hoja1.Cells(a, 14) = Hoja1.Cells(a + 1, 15) Then
+                        Hoja1.Cells(a + 1, 15).Interior.Color = RGB(300, 160, 27)
+                    End If
+                    
+                    Hoja1.Cells(a, 6) = "Previa"
+                    Hoja1.Cells(a + 1, 6) = "Pie"
+            Next j
+
+        Next i
+End Sub
+
+Private Sub CommandButton2_Click()
+        
+    Range("H3:H100").ClearContents
+    Range("G3:H100").Interior.Color = RGB(255, 255, 255)
+    Range("L3:O100").ClearContents
+    Range("L3:O100").Interior.Color = RGB(255, 255, 255)
+End Sub
+
+Private Sub CommandButton3_Click()
+
+    Range("A3:AA100").ClearContents
+    Range("A3:AA100").Interior.Color = RGB(255, 255, 255)
+End Sub
+
+Private Sub CommandButton4_Click()
+Dim a As Integer
+Dim b As Integer
+
+Dim d As Integer
+Dim n As Integer
+
+n = Hoja1.Cells(2, 31)
+For j = 1 To n
+    
+   
+    b = 2 * j + 1
+   For i = 4 To 200
+If Hoja1.Cells(b, 18) = "I" Then
+    
+     
+        
+        
+        If Hoja1.Cells(b, 20) = "-" Then
+            Hoja1.Cells(b, 11) = "mirar observación"
+                           
+        ElseIf Hoja3.Cells(i, Hoja1.Cells(b, 20)) <> 0 Then
+            
+                 If Hoja3.Cells(i, Hoja1.Cells(b, 20)) < Hoja1.Cells(b + 1, 7) Then
+           
+                    If Hoja3.Cells(i, Hoja1.Cells(b, 20) + 1) > Hoja1.Cells(b + 1, 7) Then
+                          
+                        If Hoja3.Cells(i, Hoja1.Cells(b, 20)) < Hoja1.Cells(b, 7) Then
+                       
+                            If Hoja3.Cells(i, Hoja1.Cells(b, 20) + 1) > Hoja1.Cells(b, 7) Then
+                                Hoja1.Cells(b, 11) = -Hoja3.Cells(i, 2 + Hoja1.Cells(b, 20))
+                                
+                                Exit For
+                            End If
+                       
+                        If Hoja3.Cells(i, Hoja1.Cells(b, 20) + 1) < Hoja1.Cells(b, 7) Then
+                      
+                        If Hoja3.Cells(i + 1, Hoja1.Cells(b, 20)) < Hoja1.Cells(b, 7) Then
+                       
+                            If Hoja3.Cells(i + 1, Hoja1.Cells(b, 20) + 1) > Hoja1.Cells(b, 7) Then
+                                Hoja1.Cells(b, 11) = -((Hoja3.Cells(i, 2 + Hoja1.Cells(b, 20)) * (Hoja3.Cells(i, Hoja1.Cells(b, 20) + 1) - Hoja1.Cells(b + 1, 7)) + Hoja3.Cells(i + 1, 2 + Hoja1.Cells(b, 20)) * (Hoja1.Cells(b, 7) - Hoja3.Cells(i + 1, Hoja1.Cells(b, 20)))) / (Hoja1.Cells(b, 7) - Hoja1.Cells(b + 1, 7)))
+                              
+                              Exit For
+                              End If
+                            End If
+                        End If
+                    End If
+                    
+                    End If
+                    Else
+                Hoja1.Cells(b, 11) = Hoja3.Cells(i + 1, Hoja1.Cells(b, 20))
+                 End If
+            End If
+    ElseIf Hoja1.Cells(b, 18) = "D" Then
+ 
+        
+        
+        If Hoja1.Cells(b, 20) = "-" Then
+            Hoja1.Cells(b, 11) = "mirar observación"
+                    
+        ElseIf Hoja3.Cells(i, Hoja1.Cells(b, 20)) <> 0 Then
+            
+                 If Hoja3.Cells(i, Hoja1.Cells(b, 20)) < Hoja1.Cells(b, 7) Then
+           
+                    If Hoja3.Cells(i, Hoja1.Cells(b, 20) + 1) > Hoja1.Cells(b, 7) Then
+                          
+                        If Hoja3.Cells(i, Hoja1.Cells(b, 20)) < Hoja1.Cells(b + 1, 7) Then
+                            If Hoja3.Cells(i, Hoja1.Cells(b, 20) + 1) > Hoja1.Cells(b + 1, 7) Then
+                                Hoja1.Cells(b, 11) = Hoja3.Cells(i, 2 + Hoja1.Cells(b, 20))
+                               Exit For
+                            End If
+                       
+                        If Hoja3.Cells(i, Hoja1.Cells(b, 20) + 1) < Hoja1.Cells(b + 1, 7) Then
+                         'Hoja3.Cells(b + 4, 12) = 0
+                        If Hoja3.Cells(i + 1, Hoja1.Cells(b, 20)) < Hoja1.Cells(b + 1, 7) Then
+                            If Hoja3.Cells(i + 1, Hoja1.Cells(b, 20) + 1) > Hoja1.Cells(b + 1, 7) Then
+                                Hoja1.Cells(b, 11) = (Hoja3.Cells(i, 2 + Hoja1.Cells(b, 20)) * (Hoja3.Cells(i, Hoja1.Cells(b, 20) + 1) - Hoja1.Cells(b, 7)) + Hoja3.Cells(i + 1, 2 + Hoja1.Cells(b, 20)) * (Hoja1.Cells(b + 1, 7) - Hoja3.Cells(i + 1, Hoja1.Cells(b, 20)))) / (Hoja1.Cells(b + 1, 7) - Hoja1.Cells(b, 7))
+                               Exit For
+                              End If
+                            End If
+                        End If
+                    End If
+                    
+                    End If
+                    Else
+                Hoja1.Cells(b, 11) = "calcular"
+                 End If
+            End If          
+    End If
+      Next i
+     Next j
+    
+    
+End Sub
+
